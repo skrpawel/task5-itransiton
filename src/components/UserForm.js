@@ -25,14 +25,15 @@ const UserForm = () => {
     };
 
     useEffect(() => {
+        let arr = []
         axios.get(`${url}/signup`).then(res => {
-            // (el) => users.push(el.name
-            res.data.map(e => setUsers(users => users + e.name));
-        })
-    }, []);
 
-    useEffect(() => {
-        console.log('elo')
+            res.data.map((user) => {
+                return arr.push(user.name)
+            });
+
+            return setUsers(arr);
+        });
     }, []);
 
     if (isClicked) return <MessageForm userName={name} />;

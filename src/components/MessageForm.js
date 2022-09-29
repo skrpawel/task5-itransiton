@@ -33,7 +33,7 @@ const MessageForm = (props) => {
         axios.get(`${url}/signup`).then(res => {
 
             res.data.map((user) => {
-                arr.push(user.name)
+                return arr.push(user.name)
             });
 
             return setRecipents(arr);
