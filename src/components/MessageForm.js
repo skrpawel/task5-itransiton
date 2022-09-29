@@ -1,19 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import MessageList from './MessageList'
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import axios from "axios";
 
 
 const MessageForm = (props) => {
-    const [recipent, setRecipent] = useState('');
+    const [recipent, setRecipent] = useState();
     const [message, setMessage] = useState('');
     const [title, setTitle] = useState('');
+    const [recipents, setRecipents] = useState(['']);
 
 
-    const url = 'http://localhost:5001'
-    // const url = 'https://task-4-itranistion-backend.herokuapp.com'
+    // const url = 'http://localhost:5001'
+    const url = 'https://task-5-itranistion-backend.herokuapp.com'
 
     const sendMessage = (e) => {
         e.preventDefault();
@@ -25,18 +28,47 @@ const MessageForm = (props) => {
         });
     };
 
+    useEffect(() => {
+        let arr = []
+        axios.get(`${url}/signup`).then(res => {
+
+            res.data.map((user) => {
+                arr.push(user.name)
+            });
+
+            return setRecipents(arr);
+        });
+    }, []);
+
     return (
         <div className='bg-light border container'>
-            <Form className='es' onSubmit={(e) => sendMessage(e)}>
-                <InputGroup className="mb-3">
-                    <Form.Control
-                        value={recipent}
-                        onChange={(e) => setRecipent(e.target.value)}
-                        type="text"
-                        placeholder="Your name"
-                        aria-label="Your name"
-                    />
-                </InputGroup>
+            <Form className='es' onSubmit={(e) => {
+                sendMessage(e)
+                setTitle('');
+                setRecipent();
+                setMessage('');
+            }}>
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    type="text"
+                    placeholder="Your recipent name"
+                    aria-label="Your recipent name"
+
+                    value={recipent}
+                    onChange={(event, newValue) => {
+                        setRecipent(newValue);
+                    }}
+
+                    inputValue={recipent}
+                    onInputChange={(event, newInputValue) => {
+                        setRecipent(newInputValue);
+                    }}
+
+                    options={recipents}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} label="Names" key={params} />}
+                />
                 <InputGroup className="mb-3">
                     <Form.Control
                         value={title}
@@ -55,7 +87,7 @@ const MessageForm = (props) => {
                         value={message}
                     />
                 </FloatingLabel>
-                <Button type="submit" variant="primary" size="lg" active >
+                <Button type="submit" variant="primary" size="lg" active>
                     Send
                 </Button>
             </Form>

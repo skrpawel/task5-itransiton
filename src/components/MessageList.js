@@ -6,9 +6,8 @@ const MessageList = (props) => {
     const [messages, setMessages] = useState([]);
     // const [messages_id, setMessagesID] = useState([]);
 
-
-    const url = 'http://localhost:5001'
-    // const url = 'https://task-4-itranistion-backend.herokuapp.com'
+    // const url = 'http://localhost:5001'
+    const url = 'https://task-5-itranistion-backend.herokuapp.com'
 
     useEffect(() => {
         const interval = setInterval(() => {
